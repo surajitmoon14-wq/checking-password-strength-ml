@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Password ML App</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<div class="container">
+    <h1>🔐 Password Intelligence System</h1>
+
+    <form method="POST">
+        <input type="text" name="password" placeholder="Enter password" required>
+        <button type="submit">Analyze</button>
+    </form>
+
+    {% if result %}
+    <div class="result">
+        <p><b>Input:</b> {{ result.input_password }}</p>
+        <p><b>Predicted Strength:</b> {{ result.predicted_strength }}</p>
+        <p><b>Improved Password:</b> {{ result.improved_password }}</p>
+        <p><b>Recommended Length:</b> {{ result.recommended_length }}</p>
+
+        <b>ML Suggestions:</b>
+        <ul>
+            {% for s in result.ml_suggestions %}
+                <li>{{ s }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+</div>
+
+</body>
+</html>

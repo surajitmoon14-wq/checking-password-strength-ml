@@ -1,35 +1,128 @@
-# Checking-Password-Strength-using-Machine-Learning
- 
-This is a Python code for building a machine learning model to predict the strength of passwords based on their character-level features. The model is trained on a dataset of passwords labeled as weak, medium, or strong and uses logistic regression and gradient boosting algorithms for classification.
+# 🔐 Password Intelligence System (Multi-Model ML App)
 
-# Dataset
+This project is a **multi-model machine learning–based password analysis system** that evaluates password security, improves weak passwords, and provides intelligent recommendations.
+All decisions are made using **trained machine learning models only**.
 
-The dataset used for training the model is stored in the "Password Strength.csv" file and contains a list of passwords along with their corresponding strength category. The dataset is preprocessed by dropping the rows with missing values and visualizing the distribution of the password strength categories. Let the features be
+## 🧠 Machine Learning Models Used
 
-Password - 670k unique values for password collected online
+The system integrates **multiple independent ML models**, each responsible for a specific task in password intelligence.
 
-Strength - three values(0 , 1 , 2) i.e. 0 for weak, 1 for medium, 2 for strong.
+### 1️⃣ Password Strength Prediction Model
 
-Strength of the password based on rules(such as containing digits, special symbols , etc.)
+**Files used**
 
-# Feature Engineering
-To convert the password strings into machine-readable features, we use the TF-IDF vectorizer at the character level. This converts each password into a vector of numerical features that capture the importance of each character in the password.
+- `enhanced_password_model_1.pkl`
+- `tfidf_vectorizer_1.pkl`
 
-# Model Training and Evaluation
-We split the dataset into training and testing sets and train two models, logistic regression and gradient boosting, on the training set. We evaluate the performance of the models on the testing set using metrics such as accuracy, precision, recall, and F1-score.
+**Purpose**
+Predicts the **overall strength of a password**.
 
-# Usage
-To use the password strength prediction model, simply run the Python code and input a password when prompted. The model will preprocess the password using the same vectorizer used for training the model and predict its strength category.
+**How it works**
 
-# Dependencies
-The code requires the following Python libraries to be installed:
+- The password is converted into numerical features using **TF-IDF vectorization**
+- The trained classification model predicts:
 
-Pandas
+  * `Weak`
+  * `Medium`
+  * `Strong`
 
-numpy
+**Output example**
 
-Seaborn
+```
+Input: koyel@123!RAM
+Predicted Strength: Medium
+```
 
-Sklearn
-# Acknowledgements
-This project was inspired by the Kaggle dataset on password strength and the corresponding competition. We also acknowledge the open-source Python libraries used in this project and their contributors.
+### 2️⃣ Password Improvement Model
+
+**File used**
+
+- `password_improvement_model.pkl`
+
+**Purpose**
+Generates a **stronger version of the input password**.
+
+**How it works**
+
+- Uses the same vectorized representation of the password
+- Predicts an improved password with:
+
+  * Higher complexity
+  * Better character distribution
+  * Increased resistance to attacks
+
+**Output example**
+
+```
+Original Password: koyel
+Improved Password: Ekoyel?,^2u/
+```
+
+### 3️⃣ Password Length Recommendation Model
+
+**Files used**
+
+- `length_recommender_model.pkl`
+- `length_vectorizer.pkl`
+
+**Purpose**
+Predicts the **optimal password length** for better security.
+
+**How it works**
+
+- Analyzes the structure and patterns of the input password
+- Outputs a **recommended length** that improves password strength
+
+**Output example**
+
+```
+Current Length: 7
+Recommended Length: 14
+```
+
+### 4️⃣ Advanced Password Recommendation Model
+
+**Files used**
+
+- `new_recommender_model.pkl`
+- `new_vectorizer.pkl`
+
+**Purpose**
+Generates **additional strong password suggestions**.
+
+**How it works**
+
+- Uses a separate ML pipeline trained on strong-password patterns
+- Produces multiple alternative secure passwords
+
+**Output example**
+
+```
+ML Suggestions:
+- jmR6%MNAQM'S
+- |I-83o6JJ^Wk
+- ig7//tiQ+J2h
+```
+
+## 🔄 How All Models Work Together
+
+1. User enters a password
+2. Password is processed by **multiple ML pipelines**
+3. The system returns:
+
+   * Predicted password strength
+   * Improved password
+   * Recommended password length
+   * Additional ML-generated suggestions
+
+All outputs are generated **only using trained machine learning models**.
+
+## 🛠️ Tech Stack
+
+* Python
+* Scikit-learn
+* Flask
+* Joblib
+* TF-IDF Vectorization
+* GitHub Codespaces
+
