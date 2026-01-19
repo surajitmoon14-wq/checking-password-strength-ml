@@ -15,6 +15,15 @@
   --hero-glow: rgba(62,160,255,0.15);
   --pulse: rgba(62,160,255,0.08);
   --font-heading: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+  --base-font-size: 16px;
+}
+
+/* Global box-sizing and responsive base */
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  font-size: var(--base-font-size);
+  -webkit-text-size-adjust: 100%;
 }
 
 html,body{height:100%;}
@@ -26,9 +35,11 @@ body{
   align-items:center;
   justify-content:center;
   position:relative;
-  overflow:hidden;
+  overflow-x:hidden;
+  overflow-y:auto;
   /* dark base with futuristic overlay */
   background: #000;
+  min-height: 100vh;
 }
 body::before{
   content:'';
@@ -120,6 +131,13 @@ body.clear-bg::after{
   transform: none !important;
 }
 
+/* Mobile: use scroll instead of fixed for better performance */
+@media (max-width:768px){
+  body.clear-bg::before{
+    background-attachment: scroll;
+  }
+}
+
 /* Also ensure the global background procedural layers won't animate when clear-bg is present */
 body.clear-bg::before, body.clear-bg::after { animation: none !important; }
 
@@ -151,17 +169,37 @@ input[type=text]:focus{box-shadow:0 6px 24px rgba(16,24,40,0.6);border-color:rgb
 
 /* drifting neon orbs - vivid red & green */
 .orb{position:absolute;border-radius:50%;pointer-events:none;mix-blend-mode:screen;filter:blur(22px) saturate(1.2);opacity:0.95;z-index:0;will-change:transform,opacity}
-.orb::before{content:'';position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 50% 40%, rgba(255,255,255,0.9), rgba(255,255,255,0.2) 20%, transparent 45%);} 
-.orb{animation: orbPulse 6s ease-in-out infinite} 
+.orb::before{content:'';position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 50% 40%, rgba(255,255,255,0.9), rgba(255,255,255,0.2) 20%, transparent 45%);}
+.orb{animation: orbPulse 6s ease-in-out infinite}
 @keyframes orbPulse{0%{transform:scale(1);opacity:0.9}50%{transform:scale(1.06);opacity:1}100%{transform:scale(1);opacity:0.9}}
 
 /* blue orb tones (red & green changed to cool blue light) */
 .orb-red{width:180px;height:180px;background:radial-gradient(circle at 30% 30%, rgba(110,180,255,0.95), rgba(60,140,255,0.62) 30%, rgba(6,18,40,0.16) 60%);box-shadow:0 0 90px rgba(60,140,255,0.55)}
 .orb-green{width:160px;height:160px;background:radial-gradient(circle at 30% 30%, rgba(160,210,255,0.95), rgba(90,170,255,0.62) 30%, rgba(8,20,50,0.12) 60%);box-shadow:0 0 80px rgba(90,170,255,0.45)}
-.orb-small{width:90px;height:90px} 
+.orb-small{width:90px;height:90px}
 .orb-red{width:180px;height:180px;background:radial-gradient(circle at 30% 30%, rgba(110,180,255,0.95), rgba(60,140,255,0.62) 30%, rgba(6,18,40,0.16) 60%);box-shadow:0 0 90px rgba(60,140,255,0.55)}
 .orb-green{width:160px;height:160px;background:radial-gradient(circle at 30% 30%, rgba(160,210,255,0.95), rgba(90,170,255,0.62) 30%, rgba(8,20,50,0.12) 60%);box-shadow:0 0 80px rgba(90,170,255,0.45)}
 .orb-small{width:90px;height:90px}
+
+/* Mobile: reduce orb size and blur for performance */
+@media (max-width:768px){
+  .orb{filter:blur(12px) saturate(1.1)}
+  .orb-red{width:120px;height:120px}
+  .orb-green{width:100px;height:100px}
+  .orb-small{width:60px;height:60px}
+}
+
+/* Small phones: hide orbs */
+@media (max-width:480px){
+  .orb{opacity:0.6;filter:blur(8px)}
+  .orb-red, .orb-green{width:80px;height:80px}
+  .orb-small{width:50px;height:50px}
+}
+
+/* Disable animations for users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce){
+  .orb{animation:none !important}
+}
 
 .orb-1{left:8%;top:22%;animation:moveOrbA 18s ease-in-out infinite}
 .orb-2{right:10%;top:22%;animation:moveOrbB 16s ease-in-out infinite}
@@ -237,6 +275,7 @@ input[type=text]:focus{box-shadow:0 6px 24px rgba(16,24,40,0.6);border-color:rgb
 @media (max-width:500px){
   .robot{width:100px;height:100px}
   .login-card{padding:40px 30px 35px}
+  .hud{width:180px;height:180px}
 }
 
 /* responsive tweaks */
@@ -245,6 +284,22 @@ input[type=text]:focus{box-shadow:0 6px 24px rgba(16,24,40,0.6);border-color:rgb
   input[type=text]{padding:12px}
   h1{font-size:28px}
   .star{width:25px!important;height:25px!important}
+}
+
+/* Mobile-first responsive enhancements */
+@media (max-width:480px){
+  html{font-size:14px}
+  body{overflow-x:hidden}
+  .hero{padding:16px}
+  .robot{width:90px;height:90px}
+  .hud{width:160px;height:160px}
+  .character-box h3{font-size:16px}
+}
+
+@media (max-width:360px){
+  .robot{width:80px;height:80px}
+  .hud{width:140px;height:140px}
+  .login-card{padding:28px 20px}
 }
 
 /* --- Login-style layout --- */
@@ -260,23 +315,45 @@ input[type=text]:focus{box-shadow:0 6px 24px rgba(16,24,40,0.6);border-color:rgb
 
 .login-card:hover{transform:translateY(-6px);box-shadow:0 48px 140px rgba(3,59,154,0.28), inset 0 2px 10px rgba(255,255,255,0.02)}
 
+/* Mobile: reduce hover effect for touch devices */
+@media (hover: none) and (pointer: coarse){
+  .login-card:hover{transform:none;box-shadow:0 30px 90px rgba(2,8,30,0.6), inset 0 1px 0 rgba(255,255,255,0.02)}
+}
+
 @media (max-width:700px){
   .login-card{padding:40px 30px;border-radius:16px;width:86%}
+}
+
+@media (max-width:480px){
+  .login-card{padding:32px 24px;border-radius:20px;width:94%}
+  .hero{padding:16px 12px}
+}
+
+@media (max-width:360px){
+  .login-card{padding:24px 20px}
 }
 
 @keyframes pulse-card{0%,100%{box-shadow:0 40px 120px rgba(0,150,255,0.22), 0 20px 60px rgba(60,90,130,0.12), 0 0 80px rgba(50,180,255,0.12), inset 0 1px 2px rgba(255,255,255,0.08)}50%{box-shadow:0 50px 140px rgba(0,150,255,0.30), 0 25px 70px rgba(60,90,130,0.18), 0 0 100px rgba(50,180,255,0.18), inset 0 1px 2px rgba(255,255,255,0.06)}}
 .brand{font-size:20px;margin:8px 0 0;color:#fff;letter-spacing:0.4px;font-weight:600;text-align:center}
 .login-form{display:flex;flex-direction:column;gap:16px;align-items:stretch;width:100%;margin-top:28px}
-.login-form input{width:100%;padding:14px 18px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));color:#e6eef6;outline:none;font-size:14px;transition:box-shadow .18s ease, border-color .18s ease, background .18s ease;box-sizing:border-box;box-shadow:inset 0 2px 10px rgba(0,0,0,0.55)}
+.login-form input{width:100%;padding:14px 18px;min-height:44px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));color:#e6eef6;outline:none;font-size:16px;transition:box-shadow .18s ease, border-color .18s ease, background .18s ease;box-sizing:border-box;box-shadow:inset 0 2px 10px rgba(0,0,0,0.55)}
 .login-form input::placeholder{color:rgba(255,255,255,0.28);font-weight:300}
 .login-form input:focus{border-color:rgba(62,160,255,0.6);box-shadow:0 8px 28px rgba(62,160,255,0.12), inset 0 2px 10px rgba(0,0,0,0.6);background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.008))}
-.btn-sign{width:100%;padding:14px;border-radius:28px;border:none;background:linear-gradient(90deg,var(--accent1) 0%,var(--accent2) 100%);color:#fff;font-size:15px;font-weight:800;cursor:pointer;box-shadow:0 18px 40px rgba(10,60,140,0.28), inset 0 -6px 18px rgba(255,255,255,0.02);transition:transform .22s cubic-bezier(.2,.9,.2,1),box-shadow .22s ease;text-transform:uppercase;letter-spacing:1px;margin-top:18px;padding-left:26px;padding-right:26px}
+.btn-sign{width:100%;padding:14px;min-height:44px;border-radius:28px;border:none;background:linear-gradient(90deg,var(--accent1) 0%,var(--accent2) 100%);color:#fff;font-size:15px;font-weight:800;cursor:pointer;box-shadow:0 18px 40px rgba(10,60,140,0.28), inset 0 -6px 18px rgba(255,255,255,0.02);transition:transform .22s cubic-bezier(.2,.9,.2,1),box-shadow .22s ease;text-transform:uppercase;letter-spacing:1px;margin-top:18px;padding-left:26px;padding-right:26px;touch-action:manipulation}
 .btn-sign:hover{transform:translateY(-4px) scale(1.01);box-shadow:0 28px 56px rgba(10,60,140,0.36), inset 0 -6px 20px rgba(255,255,255,0.02)}
 .btn-sign:active{transform:translateY(0) scale(0.998);box-shadow:0 12px 30px rgba(10,60,140,0.30)}
 .btn-sign::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,0.3),transparent);opacity:0;transition:opacity 0.3s ease}
 .btn-sign:hover{transform:translateY(-3px) scale(1.02);box-shadow:0 0 60px rgba(0,180,255,0.7), 0 16px 50px rgba(0,120,255,0.6), 0 4px 16px rgba(0,90,220,0.5)}
 .btn-sign:hover::before{opacity:1}
 .btn-sign:active{transform:translateY(-1px) scale(1.01)}
+
+/* Mobile input and button styles */
+@media (max-width:480px){
+  .login-form{gap:14px;margin-top:20px}
+  .login-form input{padding:14px 16px;font-size:16px;min-height:48px}
+  .btn-sign{padding:16px;font-size:14px;min-height:50px;margin-top:14px}
+  .brand{font-size:18px}
+}
 .form-row{display:flex;justify-content:space-between;align-items:center;font-size:13px;margin-top:4px}
 .form-row label{display:flex;align-items:center;gap:6px;color:rgba(255,255,255,0.7);cursor:pointer}
 .form-row input[type="checkbox"]{cursor:pointer;accent-color:var(--accent-purple)}
@@ -286,8 +363,18 @@ input[type=text]:focus{box-shadow:0 6px 24px rgba(16,24,40,0.6);border-color:rgb
 .login-links a{color:#666;text-decoration:none;transition:color 0.3s ease}
 .login-links a:hover{color:#ff6b9d}
 
-.result-panel{position:fixed;left:24px;bottom:24px;z-index:30}
-.result-panel .json-box{max-width:520px;opacity:0.95}
+.result-panel{position:fixed;left:24px;bottom:24px;z-index:30;max-width:calc(100vw - 48px)}
+.result-panel .json-box{max-width:520px;opacity:0.95;max-height:300px;overflow-y:auto}
+
+/* Mobile: make result panel full width on small screens */
+@media (max-width:680px){
+  .result-panel{left:12px;right:12px;bottom:12px;max-width:calc(100vw - 24px)}
+  .result-panel .json-box{max-height:200px;font-size:13px;padding:14px}
+}
+
+@media (max-width:480px){
+  .result-panel .json-box{max-height:150px;padding:12px}
+}
 
 @media (max-width:680px){
   .login-card{width:88%;padding:35px 25px}
@@ -298,3 +385,138 @@ input[type=text]:focus{box-shadow:0 6px 24px rgba(16,24,40,0.6);border-color:rgb
 }
 .robot svg{width:100%;height:100%;display:block}
 .robot .pupil{transition:opacity 0.2s ease}
+
+/* Tablet styles */
+@media (max-width:768px) and (min-width:481px){
+  html{font-size:15px}
+  .hero{padding:24px}
+  .login-card{width:90%;padding:50px 40px}
+  .robot{width:110px;height:110px}
+  .hud{width:200px;height:200px}
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse){
+  .btn-sign:hover{transform:none;box-shadow:0 18px 40px rgba(10,60,140,0.28)}
+  .login-card:hover{transform:none}
+}
+
+/* Performance optimizations for mobile */
+@media (max-width:768px){
+  /* Reduce blur filters for better performance */
+  body::before{filter:blur(40px)}
+  body::after{background-size:60px 60px}
+  .login-card::before{filter:blur(18px)}
+  .result-panel::before{filter:blur(24px)}
+
+  /* Reduce animation complexity */
+  @keyframes orbPulse{0%{transform:scale(1);opacity:0.9}50%{transform:scale(1.03);opacity:1}100%{transform:scale(1);opacity:0.9}}
+  @keyframes moveOrbA{0%{transform:translate(0,0) scale(1)}50%{transform:translate(10px,-12px) scale(1.02)}100%{transform:translate(0,0) scale(1)}}
+  @keyframes moveOrbB{0%{transform:translate(0,0) scale(1)}50%{transform:translate(-12px,-8px) scale(.99)}100%{transform:translate(0,0) scale(1)}}
+  @keyframes moveOrbC{0%{transform:translate(0,0) scale(1)}50%{transform:translate(10px,6px) scale(1.01)}100%{transform:translate(0,0) scale(1)}}
+  @keyframes moveOrbD{0%{transform:translate(0,0) scale(1)}50%{transform:translate(-6px,10px) scale(1.01)}100%{transform:translate(0,0) scale(1)}}
+}
+
+/* Small mobile devices */
+@media (max-width:480px){
+  /* Further reduce animation complexity */
+  @keyframes swirl{0%,100%{transform:rotate(0deg) scale(1)}50%{transform:rotate(90deg) scale(1.05)}}
+  @keyframes grid-flow{0%{background-position:0 0}100%{background-position:40px 40px}}
+}
+
+/* Disable animations for users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce){
+  *,
+  *::before,
+  *::after{
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .orb,
+  .login-card,
+  .robot{
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* Landscape mobile optimizations */
+@media (max-height:500px) and (orientation: landscape){
+  .hero{padding:12px}
+  .login-card{padding:24px 32px}
+  .robot{width:70px;height:70px}
+  .hud{width:130px;height:130px}
+  .character-box h3{font-size:14px;margin:8px 0 0}
+}
+
+/* Very small devices (old phones) */
+@media (max-width:320px){
+  html{font-size:13px}
+  .login-card{padding:20px 16px;width:98%}
+  .robot{width:70px;height:70px}
+  .hud{width:120px;height:120px}
+  .character-box h3{font-size:14px}
+  .btn-sign{font-size:13px;padding:14px 20px;min-height:48px}
+  .login-form input{font-size:15px;min-height:46px}
+}
+
+/* High-DPI displays optimization */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi){
+  .orb{will-change:transform}
+  .robot{will-change:transform}
+}
+
+/* Ensure no horizontal scrolling on any screen size */
+@media (max-width:1920px){
+  body{overflow-x:hidden}
+  .hero{max-width:100%;overflow-x:hidden}
+  .login-card{max-width:100%}
+  .result-panel{max-width:calc(100vw - 48px)}
+}
+
+/* Mobile-safe text selection */
+@media (max-width:768px){
+  ::selection{background:rgba(62,160,255,0.3);color:#fff}
+  ::-moz-selection{background:rgba(62,160,255,0.3);color:#fff}
+}
+
+/* Improve focus states for keyboard navigation */
+:focus-visible{outline:2px solid var(--accent2);outline-offset:2px}
+
+/* Ensure images don't overflow their containers */
+img{max-width:100%;height:auto;display:block}
+
+/* Smooth scrolling for anchor links */
+html{scroll-behavior:smooth}
+
+/* Mobile: prevent text size adjustment on orientation change */
+@media (orientation: landscape){
+  html{-webkit-text-size-adjust: 100%}
+}
+
+/* Ensure touch targets are properly sized on all interactive elements */
+a, button, input[type="submit"], input[type="button"], [role="button"]{
+  min-height:44px;
+  min-width:44px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:12px 16px;
+}
+
+@media (max-width:480px){
+  a, button, input[type="submit"], input[type="button"], [role="button"]{
+    min-height:48px;
+  }
+}
+
+/* Font loading optimization */
+@font-face{
+  font-display: swap;
+}
+
+/* Mobile: optimize tap highlight color */
+*{-webkit-tap-highlight-color: rgba(62,160,255,0.2)}
